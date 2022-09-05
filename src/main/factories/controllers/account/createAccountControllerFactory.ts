@@ -15,7 +15,7 @@ export const createAccountControllerFactory = () => {
     createdPresenter,
   );
  */
-  const createAccountUseCase = new CreateAccountUseCase(new AccountRepositoryMemory())
+  const createAccountUseCase = new CreateAccountUseCase(new InMemoryAccountRepositoryMemory())
   const createAccountController = new CreateAccountController(createAccountUseCase)
   
   return {
