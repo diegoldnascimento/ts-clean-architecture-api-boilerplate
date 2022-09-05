@@ -13,11 +13,7 @@ app.use(express.json());
   // Test the use case in action
   router.get('/', async (req, res) => {
     const { createAccountController } = createAccountControllerFactory()
-    await createAccountController.handleRequest(req, res);
-
-    res.json({
-      status: 'ok'
-    })
+    await createAccountController.handle(req, res);
   });
 
   app.use(router)

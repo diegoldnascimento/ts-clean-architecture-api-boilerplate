@@ -1,8 +1,9 @@
 import CreateAccountUseCase from '../../useCases/account/createAccountUseCase';
-import { httpResponse } from '../../../presentation/http/httpRespose';
+import { httpResponse } from '../../../presentation/http/httpResponse';
+import { Request, Response } from 'express';
 
 interface Controller {
-  handleRequest: (req: any, res: any) => void;
+  handle: (req: Request, res: Response) => Promise<Request>;
 }
 
 export default class CreateAccountController implements Controller {
@@ -10,23 +11,29 @@ export default class CreateAccountController implements Controller {
     private readonly createAccountUseCase: CreateAccountUseCase
   ) {}
 
-  async handleRequest(_req: any, _res: any) {
-    const body: any = null;
+  async handle(req: Request, res: Response): Promise<Request> {
+    try {
+      const body: any = null;
 
-    if (!body) {
-      console.log('Bad Request', 400)
+      if (!body) {
+        console.log('Bad Request', 400)
+      }
+  
+      if (body) {
+        console.log('Success', 201)
+      } 
+  
+      console.log({req}, await this.createAccountUseCase.execute({ ownerName: 'test' }))
+  
+      return res.send(201).json(
+        httpResponse({
+          ownerName: 'test'
+        })
+      );
+    } catch (err) {
+      return res.send(500).json({
+        status: err.message || 'Internal Server Error'
+      });
     }
-
-    if (body) {
-      console.log('Success', 201)
-    } 
-
-    console.log({_req}, await this.createAccountUseCase.execute({ ownerName: 'test' }))
-
-    return _res.json(
-      httpResponse({
-        ownerName: 'test'
-      })
-    )
   }
 }

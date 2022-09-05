@@ -9,7 +9,11 @@ export type IAccount = {
 }
 
 export default class Account {
-  constructor(readonly id: string, readonly ownerName: string, readonly bank: IBank) {
+  readonly id: string;
+  readonly ownerName: string;
+  readonly bank: IBank;
 
+  constructor(props: Omit<IAccount, 'id'>) {
+    Object.assign(this, props)
   }
 }

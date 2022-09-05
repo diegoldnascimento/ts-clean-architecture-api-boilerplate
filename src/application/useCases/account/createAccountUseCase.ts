@@ -17,7 +17,7 @@ export default class CreateAccountUseCase implements UseCase<Input, Output> {
   async execute(input: Input): Promise<Output> {
     const account = await this.accountRepository.create({
       ownerName: input.ownerName,
-    } as any);
+    });
 
     if (account) {
       return account as any;
