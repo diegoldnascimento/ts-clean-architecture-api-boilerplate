@@ -25,13 +25,13 @@ export default class CreateAccountController implements Controller {
   
       console.log({req}, await this.createAccountUseCase.execute({ ownerName: 'test' }))
   
-      return res.send(201).json(
+      return res.status(201).json(
         httpResponse({
           ownerName: 'test'
         })
       );
     } catch (err) {
-      return res.send(500).json({
+      return res.status(500).json({
         status: err.message || 'Internal Server Error'
       });
     }
