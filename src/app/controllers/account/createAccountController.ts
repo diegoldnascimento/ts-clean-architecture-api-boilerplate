@@ -1,6 +1,6 @@
 import CreateAccountUseCase from '../../useCases/account/createAccountUseCase';
-import { httpResponse } from '../../../presentation/http/httpResponse';
 import { Request, Response } from 'express';
+import { httpResponse } from '../../presentation/http/httpResponse';
 
 interface Controller {
   handle: (req: Request, res: Response) => Promise<Request>;
