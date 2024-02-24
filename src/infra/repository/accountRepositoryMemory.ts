@@ -1,37 +1,37 @@
-import type Account from '../../domain/entity/account';
-import AccountRepository from '../../domain/repository/accountRepository';
+import type Account from "../../domain/entity/account";
+import AccountRepository from "../../domain/repository/accountRepository";
 
 const AccountRepositoryErrors = {
-  NOT_FOUND_ACCOUNT: 'Account not found',
-  NOT_ALLOWED_TO_CHANGE_ID: 'Account ID is not allowed to change'
-}
+  NOT_FOUND_ACCOUNT: "Account not found",
+  NOT_ALLOWED_TO_CHANGE_ID: "Account ID is not allowed to change",
+};
 
 export default class InMemoryAccountRepository implements AccountRepository {
-  private accounts: Account[] = []
-
-  constructor() {
-
-  }
+  private accounts: Account[] = [];
 
   create(account: Account) {
-    this.accounts.push(account)
+    this.accounts.push(account);
     return account;
   }
 
-  async update(account: Account) {
+  async update(account: Account): Promise<Account> {
     return new Promise(async (resolve, reject) => {
-      const accountIdx = this.accounts.findIndex((acc) => acc.id === account.id)
+      const accountIdx = this.accounts.findIndex(
+        (acc) => acc.id === account.id
+      );
 
       if (accountIdx == -1) {
-        return reject(new Error(AccountRepositoryErrors.NOT_FOUND_ACCOUNT))
+        return reject(new Error(AccountRepositoryErrors.NOT_FOUND_ACCOUNT));
       }
 
       if (account.id !== this.accounts[accountIdx].id) {
-        return reject(new Error(AccountRepositoryErrors.NOT_ALLOWED_TO_CHANGE_ID))
+        return reject(
+          new Error(AccountRepositoryErrors.NOT_ALLOWED_TO_CHANGE_ID)
+        );
       }
 
       this.accounts[accountIdx] = account;
-      return resolve(account)
+      return resolve(account);
     });
   }
 
@@ -41,13 +41,13 @@ export default class InMemoryAccountRepository implements AccountRepository {
 
       if (account) {
         return resolve(account);
-      } 
+      }
 
-      return reject(new Error((AccountRepositoryErrors.NOT_FOUND_ACCOUNT)));
+      return reject(new Error(AccountRepositoryErrors.NOT_FOUND_ACCOUNT));
     });
   }
 
-  getAll() {
-    return this.accounts;
+  getAll(): Promise<Account[]> {
+    return Promise.resolve(this.accounts);
   }
 }

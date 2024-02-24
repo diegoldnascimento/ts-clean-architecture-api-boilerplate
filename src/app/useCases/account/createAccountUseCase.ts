@@ -1,6 +1,6 @@
-import Account from '../../../domain/entity/account';
-import AccountRepository from '../../../domain/repository/accountRepository';
-import UseCase from '../../../domain/useCases/account/useCase';
+import Account from "../../../domain/entity/account";
+import AccountRepository from "../../../domain/repository/accountRepository";
+import UseCase from "../../../domain/useCases/account/useCase";
 
 type Input = {
   ownerName: string;
