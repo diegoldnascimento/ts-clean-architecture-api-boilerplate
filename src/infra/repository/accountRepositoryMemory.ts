@@ -8,6 +8,11 @@ const AccountRepositoryErrors = {
 
 export default class InMemoryAccountRepository implements AccountRepository {
   private accounts: Account[] = [];
+  static counter = 0;
+
+  constructor() {
+    InMemoryAccountRepository.counter++;
+  }
 
   create(account: Account) {
     this.accounts.push(account);
@@ -49,5 +54,9 @@ export default class InMemoryAccountRepository implements AccountRepository {
 
   getAll(): Promise<Account[]> {
     return Promise.resolve(this.accounts);
+  }
+
+  static getCounter() {
+    return InMemoryAccountRepository.counter;
   }
 }
