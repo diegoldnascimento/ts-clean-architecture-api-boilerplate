@@ -6,7 +6,7 @@ const AccountRepositoryErrors = {
   NOT_ALLOWED_TO_CHANGE_ID: "Account ID is not allowed to change",
 };
 
-export default class InMemoryAccountRepository implements AccountRepository {
+export class InMemoryAccountRepository implements AccountRepository {
   private accounts: Account[] = [];
   static counter = 0;
 
