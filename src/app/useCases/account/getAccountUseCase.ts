@@ -1,13 +1,13 @@
 import AccountRepository from "../../../domain/repository/accountRepository";
 import UseCase from "../../../domain/useCases/account/useCase";
 
-export class GetAccountUseCase implements UseCase {
+type Input = { accountId: string };
+type Output = { accountId: string; name: string; balance: number };
 
-    constructor(private readonly accountRepository: AccountRepository) {}
+export class GetAccountUseCase implements UseCase<Input, Output> {
+  constructor(private readonly accountRepository: AccountRepository) {}
 
-    execute(accountId: string) {
-        return this.accountRepository.getAll();
-    }
-	
-
+  execute(accountId: string): Output {
+    return this.accountRepository.getAll();
+  }
 }

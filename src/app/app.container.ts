@@ -31,15 +31,13 @@ export class Container {
 export const inject = (key: string, value: any) => {
   const container = Container.getInstance();
   container.register(key, value);
-}
+};
 
 export const resolve = <T>(key: string): T => {
   const container = Container.getInstance();
   return container.resolve<T>(key);
-}
+};
 
 const container = Container.getInstance();
 
-export {
-  container
-}
+export { container };

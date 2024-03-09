@@ -1,3 +1,3 @@
 
+console.log('createAccountUseCase.ts');
 
-export default abstract class TestClass {}
