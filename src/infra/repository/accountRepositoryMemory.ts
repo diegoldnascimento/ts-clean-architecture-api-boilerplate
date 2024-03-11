@@ -1,5 +1,5 @@
 import type Account from "../../domain/entity/account";
-import AccountRepository from "../../domain/repository/accountRepository";
+import { AccountRepository } from "../../domain/repository/accountRepository";
 
 const AccountRepositoryErrors = {
   NOT_FOUND_ACCOUNT: "Account not found",
@@ -22,7 +22,7 @@ export class InMemoryAccountRepository implements AccountRepository {
   async update(account: Account): Promise<Account> {
     return new Promise(async (resolve, reject) => {
       const accountIdx = this.accounts.findIndex(
-        (acc) => acc.id === account.id
+        (acc) => acc.id === account.id,
       );
 
       if (accountIdx == -1) {
@@ -31,7 +31,7 @@ export class InMemoryAccountRepository implements AccountRepository {
 
       if (account.id !== this.accounts[accountIdx].id) {
         return reject(
-          new Error(AccountRepositoryErrors.NOT_ALLOWED_TO_CHANGE_ID)
+          new Error(AccountRepositoryErrors.NOT_ALLOWED_TO_CHANGE_ID),
         );
       }
 

@@ -1,14 +1,11 @@
 import express from "express";
 import { Router } from "express";
-import AccountRepository from "../domain/repository/accountRepository";
-import InMemoryAccountRepository from "../infra/repository/accountRepositoryMemory";
+import { AccountRepository } from "../domain/repository/accountRepository";
+import { InMemoryAccountRepository } from "../infra/repository/accountRepositoryMemory";
 import { container } from "./app.container";
 import { AccountControllerFactory } from "./factory/controllers/accountControllerFactory";
 import { AccountUseCaseFactory } from "./factory/useCases/accountUseCaseFactory";
-// import { createAccountControllerFactory } from "../main/factories/controllers/account/createAccountControllerFactory";
-//
-// Move to separate file
-//
+
 container.register("AccountRepository", new InMemoryAccountRepository());
 
 const app = express();
