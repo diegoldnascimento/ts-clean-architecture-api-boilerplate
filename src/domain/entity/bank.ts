@@ -4,5 +4,5 @@ export type IBank = {
   code: string;
   createdAt?: string;
   updatedAt?: string;
-  accounts: any;
+  accounts?: any;
 }

@@ -1,30 +1,24 @@
-import CreateAccountUseCase from "../../useCases/account/createAccountUseCase";
+import { CreateAccountUseCase } from "../../useCases/account/createAccountUseCase";
 import { Request, Response } from "express";
 import { httpResponse } from "../../presentation/http/httpResponse";
+import { MissingParamsError } from "../../errors/common/missingParamsError";
 
 interface Controller {
-  handle: (req: Request, res: Response) => Promise<Request>;
+  handle: (req: Request, res: Response) => Promise<Response>;
 }
 
 export default class CreateAccountController implements Controller {
   constructor(private readonly createAccountUseCase: CreateAccountUseCase) {}
 
-  async handle(req: Request, res: Response): Promise<Request> {
+  async handle(req: Request, res: Response): Promise<Response> {
     try {
       const body: any = null;
 
       if (!body) {
-        console.log("Bad Request", 400);
+        throw new MissingParamsError("body");
       }
 
-      if (body) {
-        console.log("Success", 201);
-      }
-
-      console.log(
-        { req },
-        await this.createAccountUseCase.execute({ ownerName: "test" }),
-      );
+      const accountCreated = await this.createAccountUseCase.execute({ ownerName: "test" });
 
       return res.status(201).json(
         httpResponse({
@@ -32,9 +26,17 @@ export default class CreateAccountController implements Controller {
         }),
       );
     } catch (err) {
-      return res.status(500).json({
-        status: err.message || "Internal Server Error",
-      });
+      if (err instanceof MissingParamsError) {
+        const fieldName = err.message; 
+        return res.status(400).json({
+          error: `Missing parameter: ${fieldName}`,
+        });
+      } else {
+        return res.status(500).json({
+          status: err.message || "Internal Server Error",
+        });
+      }
     }
   }
 }
+
