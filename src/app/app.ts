@@ -22,7 +22,7 @@ app.use(express.json());
       accountUseCaseFactory
     );
 
-    await accountControllerFactory.createAccountController().handle(req, res);
+    await accountControllerFactory.createAccountController().handleRequest(req, res);
   });
 
   router.get("/1", async (req, res) => {
@@ -32,7 +32,7 @@ app.use(express.json());
       accountUseCaseFactory
     );
 
-    await accountControllerFactory.createAccountController().handle(req, res);
+    await accountControllerFactory.createAccountController().handleRequest(req, res);
 
   });
 

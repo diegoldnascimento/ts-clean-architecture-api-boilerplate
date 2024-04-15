@@ -1,42 +1,61 @@
 import { CreateAccountUseCase } from "../../useCases/account/createAccountUseCase";
-import { Request, Response } from "express";
-import { httpResponse } from "../../presentation/http/httpResponse";
 import { MissingParamsError } from "../../errors/common/missingParamsError";
+import {
+  GenericHttpResponse,
+  HttpResponsePresenter,
+} from "../../presentation/http/httpResponse";
+import { Controller } from "../../../domain/controllers/controller";
+import { HttpRequest } from "../../../domain/protocols/http/httpRequest";
+import { HttpResponse } from "../../../domain/protocols/http/httpResponse";
 
-interface Controller {
-  handle: (req: Request, res: Response) => Promise<Response>;
+interface CreateAccountHttpResponse {
+  ownerName: string;
+}
+
+interface CreateAccountHttpRequest {
+  ownerName: string;
 }
 
 export default class CreateAccountController implements Controller {
-  constructor(private readonly createAccountUseCase: CreateAccountUseCase) {}
+  constructor(
+    private readonly createAccountUseCase: CreateAccountUseCase,
+    private readonly presenter: HttpResponsePresenter<CreateAccountHttpResponse>,
+  ) {}
 
-  async handle(req: Request, res: Response): Promise<Response> {
-    try {
-      const body: any = null;
+  async handleRequest(
+    request: HttpRequest,
+    response: HttpResponse,
+  ): Promise<GenericHttpResponse> {
+    const { body } = request;
 
-      if (!body) {
-        throw new MissingParamsError("body");
-      }
-
-      const accountCreated = await this.createAccountUseCase.execute({ ownerName: "test" });
-
-      return res.status(201).json(
-        httpResponse({
-          ownerName: "test",
-        }),
-      );
-    } catch (err) {
-      if (err instanceof MissingParamsError) {
-        const fieldName = err.message; 
-        return res.status(400).json({
-          error: `Missing parameter: ${fieldName}`,
-        });
-      } else {
-        return res.status(500).json({
-          status: err.message || "Internal Server Error",
-        });
-      }
+    if (!body) {
+      throw new MissingParamsError("body");
     }
+
+    const accountCreated = await this.createAccountUseCase.execute({
+      ownerName: "test",
+    });
+
+    return this.presenter.response({
+      ownerName: "test",
+    });
+
+    // return res.status(201).json(
+    //   httpResponse({
+    //     ownerName: "test",
+    //   }),
+    // );
+    // } catch (err) {
+    //   if (err instanceof MissingParamsError) {
+    //     const fieldName = err.message;
+    //     return res.status(400).json({
+    //       error: `Missing parameter: ${fieldName}`,
+    //     });
+    //   } else {
+    //     return res.status(500).json({
+    //       status: err.message || "Internal Server Error",
+    //     });
+    //   }
+    // }
   }
 }
-
