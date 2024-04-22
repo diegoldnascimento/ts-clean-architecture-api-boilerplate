@@ -1,13 +1,14 @@
 import express from "express";
 import { Router } from "express";
 import { AccountRepository } from "../domain/repository/accountRepository";
-import { InMemoryAccountRepository } from "../infra/repository/accountRepositoryMemory";
+import { AccountInMemoryRepository } from "../infra/repository/account/accountInMemoryRepository";
 import { container } from "./app.container";
+import { CreateAccountHttpResponse } from "./controllers/account/createAccountController";
 import { AccountControllerFactory } from "./factory/controllers/accountControllerFactory";
 import { AccountUseCaseFactory } from "./factory/useCases/accountUseCaseFactory";
 import { GenericHttpSuccess } from "./presentation/http/httpResponse";
 
-container.register("AccountRepository", new InMemoryAccountRepository());
+container.register("AccountRepository", new AccountInMemoryRepository());
 
 const app = express();
 const router = Router();
@@ -20,12 +21,10 @@ app.use(express.json());
     const accountRepository =
       container.resolve<AccountRepository>("AccountRepository");
     const accountUseCaseFactory = new AccountUseCaseFactory(accountRepository);
-    const presenter = new GenericHttpSuccess();
+    const presenter = new GenericHttpSuccess<CreateAccountHttpResponse>();
     const accountControllerFactory = new AccountControllerFactory(
       accountUseCaseFactory,
-      presenter<{
-        ownerName: string;
-      }>,
+      presenter
     );
 
     const response = await accountControllerFactory
@@ -33,17 +32,6 @@ app.use(express.json());
       .handleRequest(req, res as any);
 
     res.send(response)
-  });
-
-  router.get("/1", async (req, res) => {
-    const accountRepository =
-      container.resolve<AccountRepository>("AccountRepository");
-    const accountUseCaseFactory = new AccountUseCaseFactory(accountRepository);
-    const accountControllerFactory = new AccountControllerFactory(
-      accountUseCaseFactory,
-    );
-
-    // await accountControllerFactory.createAccountController().handleRequest(req, res);
   });
 
   app.use(router);

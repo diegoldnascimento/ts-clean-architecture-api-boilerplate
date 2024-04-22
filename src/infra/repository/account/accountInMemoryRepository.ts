@@ -1,17 +1,17 @@
-import type Account from "../../domain/entity/account";
-import { AccountRepository } from "../../domain/repository/accountRepository";
+import Account from "../../../domain/entity/account";
+import { AccountRepository } from "../../../domain/repository/accountRepository";
 
 const AccountRepositoryErrors = {
   NOT_FOUND_ACCOUNT: "Account not found",
   NOT_ALLOWED_TO_CHANGE_ID: "Account ID is not allowed to change",
 };
 
-export class InMemoryAccountRepository implements AccountRepository {
+export class AccountInMemoryRepository implements AccountRepository {
   private accounts: Account[] = [];
   static counter = 0;
 
   constructor() {
-    InMemoryAccountRepository.counter++;
+    AccountInMemoryRepository.counter++;
   }
 
   create(account: Account) {
@@ -57,6 +57,6 @@ export class InMemoryAccountRepository implements AccountRepository {
   }
 
   static getCounter() {
-    return InMemoryAccountRepository.counter;
+    return AccountInMemoryRepository.counter;
   }
 }

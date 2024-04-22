@@ -1,10 +1,10 @@
-import { InMemoryAccountRepository } from "./accountRepositoryMemory";
+import { AccountInMemoryRepository } from "./accountInMemoryRepository";
 
 describe("accountRepositoryMemory", () => {
   let accountRepository: any;
 
   beforeEach(() => {
-    accountRepository = new InMemoryAccountRepository();
+    accountRepository = new AccountInMemoryRepository();
   });
 
   it("should create an account", () => {

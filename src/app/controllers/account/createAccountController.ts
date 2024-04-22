@@ -8,11 +8,11 @@ import { Controller } from "../../../domain/controllers/controller";
 import { HttpRequest } from "../../../domain/protocols/http/httpRequest";
 import { HttpResponse } from "../../../domain/protocols/http/httpResponse";
 
-interface CreateAccountHttpResponse {
+export interface CreateAccountHttpResponse {
   ownerName: string;
 }
 
-interface CreateAccountHttpRequest {
+export interface CreateAccountHttpParams {
   ownerName: string;
 }
 
