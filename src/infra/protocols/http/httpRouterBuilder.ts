@@ -1,6 +1,6 @@
 interface HttpRouter {
-  addRoute(route: string): HttpRouter;
-  build(): HttpRouter;
+  addRoute(route: string): any;
+  build(): any;
 }
 
 import { Router } from "express";
@@ -14,21 +14,22 @@ export class HttpExpressRouter {
   ) {
     const router = Router();
     const endpoint = [this.version, this.route].join("/");
-    router[this.method](endpoint, async (request, response: any) => {
-      new handler().handleRequest(request, response);
-
-      // const accountRepository =
-      //   container.resolve<AccountRepository>("AccountRepository");
-      // const accountUseCaseFactory = new AccountUseCaseFactory(
-      //   accountRepository,
-      // );
-      // const accountControllerFactory = new AccountControllerFactory(
-      //   accountUseCaseFactory,
-      // );
-      // await accountControllerFactory
-      //   .createAccountController()
-      //   .handleRequest(req, res);
-    });
+    console.log({ method, route, version, handler });
+    // router[this.method](endpoint, async (request, response: any) => {
+    //   new handler().handleRequest(request, response);
+    //
+    //   // const accountRepository =
+    //   //   container.resolve<AccountRepository>("AccountRepository");
+    //   // const accountUseCaseFactory = new AccountUseCaseFactory(
+    //   //   accountRepository,
+    //   // );
+    //   // const accountControllerFactory = new AccountControllerFactory(
+    //   //   accountUseCaseFactory,
+    //   // );
+    //   // await accountControllerFactory
+    //   //   .createAccountController()
+    //   //   .handleRequest(req, res);
+    // });
   }
   // router.get("/", async (req, res) => {
   //   const accountRepository = container.resolve<AccountRepository>("AccountRepository");
@@ -41,7 +42,7 @@ export class HttpExpressRouter {
   // });
 }
 
-export class HttpRouterBuilder implements HttpRouter {
+export class HttpRouterBuilder {
   private route: string;
   private version: "v1" | "v2" = "v1";
   private method: string;
@@ -67,16 +68,19 @@ export class HttpRouterBuilder implements HttpRouter {
     return this;
   }
 
-  static build(): HttpRouter {
+  static build(): any {
     // return new HttpRouter();
-    
-    return new HttpExpressRouter(
-      HttpRouterBuilder.method,
-      HttpRouterBuilder.route,
-      HttpRouterBuilder.version,
-      HttpRouterBuilder.controller,
-    );
+    // return new HttpExpressRouter(
+    //   HttpRouterBuilder.method,
+    //   HttpRouterBuilder.route,
+    //   HttpRouterBuilder.version,
+    //   HttpRouterBuilder.controller,
+    // );
   }
 }
 
-const router = new HttpRouterBuilder().addRoute("/").addMethod("get").addHandler("AccountController").build();
+const router = new HttpRouterBuilder()
+  .addRoute("/")
+  .addMethod("get")
+  .addHandler("AccountController");
+  // .build();

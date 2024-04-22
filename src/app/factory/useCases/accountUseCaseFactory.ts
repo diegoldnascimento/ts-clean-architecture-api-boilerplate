@@ -1,4 +1,4 @@
-import AccountRepository from "../../../domain/repository/accountRepository";
+import { AccountRepository } from "../../../domain/repository/accountRepository";
 import InMemoryAccountRepository from "../../../infra/repository/accountRepositoryMemory";
 import { GetAccountUseCase } from "../../useCases/account/getAccountUseCase";
 
@@ -16,7 +16,7 @@ export class AccountUseCaseFactory implements AccountAbstractFactory {
   ): AccountUseCaseFactory {
     if (!AccountUseCaseFactory.instance) {
       AccountUseCaseFactory.instance = new AccountUseCaseFactory(
-        accountRepository
+        accountRepository,
       );
     }
     return AccountUseCaseFactory.instance;
