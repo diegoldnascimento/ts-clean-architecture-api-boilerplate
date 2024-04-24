@@ -2,6 +2,7 @@ export interface GenericHttpResponse {
   body?: any;
   statusCode: number;
   error?: string;
+  message?: string | Error;
 }
 
 export class GenericHttpResponsePresenter<T>
@@ -9,7 +10,8 @@ export class GenericHttpResponsePresenter<T>
 {
   serverError(error: Error): GenericHttpResponse {
     return {
-      error: error.toString(),
+      message: error.toString(),
+      error: "Internal Server Error",
       statusCode: 400,
     };
   }
@@ -23,14 +25,16 @@ export class GenericHttpResponsePresenter<T>
 
   badRequest(error: Error): GenericHttpResponse {
     return {
-      error: error.toString(),
+      error: "Bad Request",
+      message: error.toString(),
       statusCode: 400,
     };
   }
 
   forbidden(error: Error): GenericHttpResponse {
     return {
-      error: error.toString(),
+      message: error.toString(),
+      error: "Unauthorized",
       statusCode: 401,
     };
   }
