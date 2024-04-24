@@ -3,10 +3,13 @@ import { Router } from "express";
 import { AccountRepository } from "../domain/repository/accountRepository";
 import { AccountInMemoryRepository } from "../infra/repository/account/accountInMemoryRepository";
 import { container } from "./app.container";
-import { CreateAccountHttpResponse } from "./controllers/account/createAccountController";
+import { CreateAccountHttpResponseModel } from "./controllers/account/createAccountController";
 import { AccountControllerFactory } from "./factory/controllers/accountControllerFactory";
 import { AccountUseCaseFactory } from "./factory/useCases/accountUseCaseFactory";
-import { GenericHttpSuccess } from "./presentation/http/httpResponse";
+import {
+  GenericHttpResponsePresenter,
+  GenericHttpSuccess,
+} from "./presentation/http/httpResponse";
 
 container.register("AccountRepository", new AccountInMemoryRepository());
 
@@ -21,17 +24,18 @@ app.use(express.json());
     const accountRepository =
       container.resolve<AccountRepository>("AccountRepository");
     const accountUseCaseFactory = new AccountUseCaseFactory(accountRepository);
-    const presenter = new GenericHttpSuccess<CreateAccountHttpResponse>();
+    const presenter =
+      new GenericHttpResponsePresenter<CreateAccountHttpResponseModel>();
     const accountControllerFactory = new AccountControllerFactory(
       accountUseCaseFactory,
-      presenter
+      presenter,
     );
 
     const response = await accountControllerFactory
       .createAccountController()
       .handleRequest(req, res as any);
 
-    res.send(response)
+    res.send(response);
   });
 
   app.use(router);

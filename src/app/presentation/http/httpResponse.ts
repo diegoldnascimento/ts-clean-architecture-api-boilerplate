@@ -1,20 +1,41 @@
 export interface GenericHttpResponse {
-  body: any;
+  body?: any;
   statusCode: number;
   error?: string;
 }
 
-export class GenericHttpSuccess<T> implements HttpResponsePresenter<T> {
-  response(body: T): GenericHttpResponse {
+export class GenericHttpResponsePresenter<T>
+  implements HttpResponsePresenter<T>
+{
+  serverError(error: Error): GenericHttpResponse {
+    return {
+      error: error.toString(),
+      statusCode: 400,
+    };
+  }
+
+  success(body: T): GenericHttpResponse {
     return {
       body,
       statusCode: 200,
     };
   }
-}
 
-export class GenericHttpSuccessCreated<T> implements HttpResponsePresenter<T> {
-  response(body: T): GenericHttpResponse {
+  badRequest(error: Error): GenericHttpResponse {
+    return {
+      error: error.toString(),
+      statusCode: 400,
+    };
+  }
+
+  forbidden(error: Error): GenericHttpResponse {
+    return {
+      error: error.toString(),
+      statusCode: 401,
+    };
+  }
+
+  created(body: T): GenericHttpResponse {
     return {
       body,
       statusCode: 201,
@@ -22,26 +43,10 @@ export class GenericHttpSuccessCreated<T> implements HttpResponsePresenter<T> {
   }
 }
 
-export class GenericHttpBadRequest<T> implements HttpResponsePresenter<T> {
-  response(body: T): GenericHttpResponse {
-    return {
-      body,
-      error: "Bad Request",
-      statusCode: 400,
-    };
-  }
-}
-
-export class GenericHttpInternalServerErrorRequest<T> implements HttpResponsePresenter<T> {
-  response(body: T): GenericHttpResponse {
-    return {
-      body,
-      error: "Internal Server Error",
-      statusCode: 500,
-    };
-  }
-}
-
 export interface HttpResponsePresenter<T> {
-  response: (body: T) => GenericHttpResponse;
+  serverError: (error: Error) => GenericHttpResponse;
+  forbidden: (error: Error) => GenericHttpResponse;
+  success: (body: T) => GenericHttpResponse;
+  badRequest: (error: Error) => GenericHttpResponse;
+  created: (body: T) => GenericHttpResponse;
 }

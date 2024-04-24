@@ -8,54 +8,36 @@ import { Controller } from "../../../domain/controllers/controller";
 import { HttpRequest } from "../../../domain/protocols/http/httpRequest";
 import { HttpResponse } from "../../../domain/protocols/http/httpResponse";
 
-export interface CreateAccountHttpResponse {
+export interface CreateAccountHttpResponseModel {
   ownerName: string;
 }
 
-export interface CreateAccountHttpParams {
+export interface CreateAccountHttpParamsModel {
   ownerName: string;
 }
 
 export default class CreateAccountController implements Controller {
   constructor(
     private readonly createAccountUseCase: CreateAccountUseCase,
-    private readonly presenter: HttpResponsePresenter<CreateAccountHttpResponse>,
+    private readonly presenter: HttpResponsePresenter<CreateAccountHttpResponseModel>,
   ) {}
 
   async handleRequest(
     request: HttpRequest,
-    response: HttpResponse,
+    _: HttpResponse,
   ): Promise<GenericHttpResponse> {
     const { body } = request;
 
-    if (!body) {
-      throw new MissingParamsError("body");
+    if (!body || Object.keys(body).length == 0) {
+      return this.presenter.badRequest(new MissingParamsError("body"));
     }
 
-    const accountCreated = await this.createAccountUseCase.execute({
+    const { ownerName } = await this.createAccountUseCase.execute({
       ownerName: "test",
     });
 
-    return this.presenter.response({
-      ownerName: "test",
+    return this.presenter.created({
+      ownerName,
     });
-
-    // return res.status(201).json(
-    //   httpResponse({
-    //     ownerName: "test",
-    //   }),
-    // );
-    // } catch (err) {
-    //   if (err instanceof MissingParamsError) {
-    //     const fieldName = err.message;
-    //     return res.status(400).json({
-    //       error: `Missing parameter: ${fieldName}`,
-    //     });
-    //   } else {
-    //     return res.status(500).json({
-    //       status: err.message || "Internal Server Error",
-    //     });
-    //   }
-    // }
   }
 }
