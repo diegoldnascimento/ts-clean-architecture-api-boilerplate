@@ -1,6 +1,6 @@
-export interface HttpRequest {
-  url: string
-  method: string
-  body?: any
-  headers?: any
+export interface HttpRequest<T> {
+  url: string;
+  method: string;
+  body?: T;
+  headers?: any;
 }

@@ -12,7 +12,7 @@ export interface CreateAccountHttpResponseModel {
   ownerName: string;
 }
 
-export interface CreateAccountHttpParamsModel {
+export interface CreateAccountHttpRequestModel {
   ownerName: string;
 }
 
@@ -23,13 +23,16 @@ export default class CreateAccountController implements Controller {
   ) {}
 
   async handleRequest(
-    request: HttpRequest,
-    _: HttpResponse,
+    request: HttpRequest<CreateAccountHttpRequestModel>,
   ): Promise<GenericHttpResponse> {
     const { body } = request;
 
     if (!body || Object.keys(body).length == 0) {
       return this.presenter.badRequest(new MissingParamsError("body"));
+    }
+
+    if (!body.ownerName) {
+      return this.presenter.badRequest(new MissingParamsError("ownerName"));
     }
 
     const { ownerName } = await this.createAccountUseCase.execute({

@@ -33,7 +33,7 @@ app.use(express.json());
 
     const response = await accountControllerFactory
       .createAccountController()
-      .handleRequest(req, res as any);
+      .handleRequest(req);
 
     res.send(response);
   });
