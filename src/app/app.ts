@@ -7,7 +7,7 @@ import { CreateAccountHttpResponseModel } from "./controllers/account/createAcco
 import { AccountControllerFactory } from "./factory/controllers/accountControllerFactory";
 import { AccountUseCaseFactory } from "./factory/useCases/accountUseCaseFactory";
 import {
-  GenericHttpResponsePresenter,
+  GenericHttpResponsePresenter as HttpResponsePresenter,
   GenericHttpSuccess,
 } from "./presentation/http/httpResponse";
 
@@ -25,7 +25,7 @@ app.use(express.json());
       container.resolve<AccountRepository>("AccountRepository");
     const accountUseCaseFactory = new AccountUseCaseFactory(accountRepository);
     const presenter =
-      new GenericHttpResponsePresenter<CreateAccountHttpResponseModel>();
+      new HttpResponsePresenter<CreateAccountHttpResponseModel>();
     const accountControllerFactory = new AccountControllerFactory(
       accountUseCaseFactory,
       presenter,

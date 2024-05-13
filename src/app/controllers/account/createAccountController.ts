@@ -39,9 +39,9 @@ export default class CreateAccountController implements Controller {
     });
 
     if (createAccountUseCase.isLeft()) {
-      const { value } = createAccountUseCase;
-      return this.presenter.serverError(new Error("Error that needs improvements"))
+      return this.presenter.serverError(new Error("Error that needs improvementjs"))
     }
+
 
     const { value } = createAccountUseCase;
     const { ownerName } = value;
