@@ -6,7 +6,6 @@ import {
 } from "../../presentation/http/httpResponse";
 import { Controller } from "../../../domain/controllers/controller";
 import { HttpRequest } from "../../../domain/protocols/http/httpRequest";
-import { HttpResponse } from "../../../domain/protocols/http/httpResponse";
 
 export interface CreateAccountHttpResponseModel {
   ownerName: string;
@@ -35,9 +34,17 @@ export default class CreateAccountController implements Controller {
       return this.presenter.badRequest(new MissingParamsError("ownerName"));
     }
 
-    const { ownerName } = await this.createAccountUseCase.execute({
+    const createAccountUseCase = await this.createAccountUseCase.execute({
       ownerName: "test",
     });
+
+    if (createAccountUseCase.isLeft()) {
+      const { value } = createAccountUseCase;
+      return this.presenter.serverError(new Error("Error that needs improvements"))
+    }
+
+    const { value } = createAccountUseCase;
+    const { ownerName } = value;
 
     return this.presenter.created({
       ownerName,

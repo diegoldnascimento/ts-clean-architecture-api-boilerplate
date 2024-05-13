@@ -1,3 +1,4 @@
+import { Either, left, right } from "../../../domain/errors/either/either";
 import { AccountRepository } from "../../../domain/repository/accountRepository";
 import UseCase from "../../../domain/useCases/account/useCase";
 import { MissingParamsError } from "../../errors/common/missingParamsError";
@@ -6,10 +7,13 @@ type Input = {
   ownerName: string;
 };
 
-type Output = {
-  id: string;
-  ownerName: string;
-};
+type Output = Either<
+  MissingParamsError | Error,
+  {
+    id: string;
+    ownerName: string;
+  }
+>;
 
 export class CreateAccountUseCase implements UseCase<Input, Output> {
   constructor(readonly accountRepository: AccountRepository) {}
@@ -25,12 +29,12 @@ export class CreateAccountUseCase implements UseCase<Input, Output> {
     });
 
     if (!accountCreated) {
-      throw new MissingParamsError("account");
+      return left(new MissingParamsError("account"));
     }
 
-    return {
+    return right({
       id: accountCreated.id,
       ownerName: accountCreated.ownerName,
-    };
+    });
   }
 }
