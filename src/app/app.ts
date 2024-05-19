@@ -2,6 +2,7 @@ import express from "express";
 import { Router } from "express";
 import { AccountRepository } from "../domain/repository/accountRepository";
 import { AccountInMemoryRepository } from "../infra/repository/account/accountInMemoryRepository";
+import { ProductsRavenDbRepository } from "../infra/repository/products/productsRavenDbRepository";
 import { container } from "./app.container";
 import { CreateAccountHttpResponseModel } from "./controllers/account/createAccountController";
 import { AccountControllerFactory } from "./factory/controllers/accountControllerFactory";
@@ -39,6 +40,8 @@ app.use(express.json());
   });
 
   app.use(router);
+
+  new ProductsRavenDbRepository().createProduct()
 
   app.listen(3001, () => {
     console.log("localhost:3001 is running");

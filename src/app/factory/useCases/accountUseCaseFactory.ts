@@ -1,5 +1,5 @@
+import { AccountAbstractFactory } from "../../../domain/factory/useCases/accountAbstractFactory";
 import { AccountRepository } from "../../../domain/repository/accountRepository";
-import InMemoryAccountRepository from "../../../infra/repository/accountRepositoryMemory";
 import { GetAccountUseCase } from "../../useCases/account/getAccountUseCase";
 
 export class AccountUseCaseFactory implements AccountAbstractFactory {
