@@ -1,38 +1,18 @@
-import { DocumentStore } from "ravendb";
-
-interface Repository {
-
-}
+import { Repository } from "../../../domain/repository/repository";
+import { RavenDbClient } from "../../adapters/db/ravendb/ravendbClient";
+import { ProductDTO } from "../../dtos/products/productDTO";
 
 export class ProductsRavenDbRepository implements Repository {
-  private dbClient;
-  private dbSession;
-  constructor() {
-    this.dbClient = new DocumentStore("http://live-test.ravendb.net", "test");
-    this.dbClient.initialize();
+  constructor(private readonly ravenDbClient: RavenDbClient) {}
 
-    this.dbSession = this.dbClient.openSession();
-  }
-
-  createProduct() {
+  create(product: ProductDTO) {
     (async () => {
-      const product = {
-        id: null,
-        title: "iPhone X",
-        price: 999.99,
-        currency: "USD",
-        storage: 64,
-        manufacturer: "Apple",
-        in_stock: true,
-        last_update: new Date("2017-10-01T00:00:00"),
-      };
-
       const promise = async (i: number) => {
         const startTime = performance.now();
-        await this.dbSession.store(product, `products/${1}-A`);
 
-        console.log(product); // products/1-A
-        await this.dbSession.saveChanges();
+        await this.ravenDbClient.store(product, `products/${1}-A`);
+
+        await this.ravenDbClient.saveChanges();
 
         const endTime = performance.now();
 
