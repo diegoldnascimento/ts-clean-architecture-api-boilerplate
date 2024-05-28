@@ -7,26 +7,28 @@ import {
 import { Controller } from "../../../domain/controllers/controller";
 import { HttpRequest } from "../../../domain/protocols/http/httpRequest";
 
-export interface CreateAccountHttpResponseModel {
+export interface CreateAccountResponse {
   ownerName: string;
 }
 
-export interface CreateAccountHttpRequestModel {
+export interface CreateAccountRequest {
   ownerName: string;
 }
 
-export default class CreateAccountController implements Controller {
+export default class CreateAccountController
+  implements Controller<CreateAccountRequest, CreateAccountResponse>
+{
   constructor(
     private readonly createAccountUseCase: CreateAccountUseCase,
-    private readonly presenter: HttpResponsePresenter<CreateAccountHttpResponseModel>,
+    private readonly presenter: HttpResponsePresenter<CreateAccountResponse>,
   ) {}
 
   async handleRequest(
-    request: HttpRequest<CreateAccountHttpRequestModel>,
+    request: HttpRequest<CreateAccountRequest>,
   ): Promise<GenericHttpResponse> {
     const { body } = request;
 
-    if (!body || Object.keys(body).length == 0) {
+    if (!body || Object.keys(body).length === 0) {
       return this.presenter.badRequest(new MissingParamsError("body"));
     }
 
@@ -34,16 +36,15 @@ export default class CreateAccountController implements Controller {
       return this.presenter.badRequest(new MissingParamsError("ownerName"));
     }
 
-    const createAccountUseCase = await this.createAccountUseCase.execute({
-      ownerName: "test",
+    const createAccountResult = await this.createAccountUseCase.execute({
+      ownerName: body.ownerName,
     });
 
-    if (createAccountUseCase.isLeft()) {
-      return this.presenter.serverError(new Error("Error that needs improvementjs"))
+    if (createAccountResult.isLeft()) {
+      return this.presenter.serverError(new Error("Failed to create account"));
     }
 
-
-    const { value } = createAccountUseCase;
+    const { value } = createAccountResult;
     const { ownerName } = value;
 
     return this.presenter.created({
@@ -51,3 +52,4 @@ export default class CreateAccountController implements Controller {
     });
   }
 }
+
