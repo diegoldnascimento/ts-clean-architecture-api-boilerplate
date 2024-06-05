@@ -1,5 +1,5 @@
 import { Either, left, right } from "../../../domain/errors/either/either";
-import { AccountRepository } from "../../../domain/repository/accountRepository";
+import { AccountRepository } from "../../../domain/repositories/accountRepository";
 import UseCase from "../../../domain/useCases/account/useCase";
 import { MissingParamsError } from "../../errors/common/missingParamsError";
 

@@ -1,17 +1,16 @@
 import express from "express";
 import { Router } from "express";
-import { AccountRepository } from "../domain/repository/accountRepository";
+import { AccountRepository } from "../domain/repositories/accountRepository";
 import { RavenDbClient } from "../infra/adapters/db/ravendb/ravendbClient";
-import { AccountInMemoryRepository } from "../infra/repository/account/accountInMemoryRepository";
-import { ProductsRavenDbRepository } from "../infra/repository/products/productsRavenDbRepository";
+import { AccountInMemoryRepository } from "../infra/repositories/account/accountInMemoryRepository";
+import { ProductsRavenDbRepository } from "../infra/repositories/products/productsRavenDbRepository";
 import { container } from "./app.container";
-import { CreateAccountHttpResponseModel } from "./controllers/account/createAccountController";
-import { AccountControllerFactory } from "./factory/controllers/accountControllerFactory";
-import { AccountUseCaseFactory } from "./factory/useCases/accountUseCaseFactory";
-import {
-  GenericHttpResponsePresenter as HttpResponsePresenter,
-  GenericHttpSuccess,
-} from "./presentation/http/httpResponse";
+import { CreateAccountResponse } from "./controllers/account/createAccountController";
+import CreateProductController from "./controllers/products/createProductController";
+import { AccountControllerFactory } from "./factories/controllers/accountControllerFactory";
+import { AccountUseCaseFactory } from "./factories/useCases/accountUseCaseFactory";
+import { GenericHttpResponsePresenter as HttpResponsePresenter } from "./presentation/http/httpResponse";
+import { CreateProductUseCase } from "./useCases/products/createProductUseCase";
 
 container.register(
   "RavenDbClient",
@@ -25,13 +24,11 @@ const router = Router();
 app.use(express.json());
 
 (async () => {
-  // Test the use case in action
   router.get("/", async (req, res) => {
     const accountRepository =
       container.resolve<AccountRepository>("AccountRepository");
     const accountUseCaseFactory = new AccountUseCaseFactory(accountRepository);
-    const presenter =
-      new HttpResponsePresenter<CreateAccountHttpResponseModel>();
+    const presenter = new HttpResponsePresenter<CreateAccountResponse>();
     const accountControllerFactory = new AccountControllerFactory(
       accountUseCaseFactory,
       presenter,
@@ -44,26 +41,25 @@ app.use(express.json());
     res.send(response);
   });
 
+  router.get("/products", async (req, res) => {
+    const ravenDbClient = container.resolve<RavenDbClient>("RavenDbClient");
+    const productsRavenDbRepository = new ProductsRavenDbRepository(
+      ravenDbClient,
+    );
+    const presenter = new HttpResponsePresenter<CreateAccountResponse>();
+    const createProductUseCase = new CreateProductUseCase(
+      productsRavenDbRepository,
+    );
+    const createProductController = new CreateProductController(
+      createProductUseCase,
+      presenter,
+    );
+    const response = await createProductController.handleRequest(req);
+
+    res.send(response);
+  });
+
   app.use(router);
-
-  const product = {
-    id: null,
-    title: "iPhone X",
-    price: 999.99,
-    currency: "USD",
-    storage: 64,
-    manufacturer: "Apple",
-    in_stock: true,
-    last_update: new Date("2017-10-01T00:00:00"),
-  };
-
-  const ravenDbClient = container.resolve<RavenDbClient>("RavenDbClient");
-
-  const productsRavenDbRepository = new ProductsRavenDbRepository(
-    ravenDbClient,
-  );
-
-  productsRavenDbRepository.create(product);
 
   app.listen(3001, () => {
     console.log("localhost:3001 is running");

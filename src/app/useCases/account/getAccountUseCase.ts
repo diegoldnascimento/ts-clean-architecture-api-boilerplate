@@ -1,4 +1,4 @@
-import AccountRepository from "../../../domain/repository/accountRepository";
+import { AccountRepository } from "../../../domain/repositories/accountRepository";
 import UseCase from "../../../domain/useCases/account/useCase";
 
 type Input = { accountId: string };

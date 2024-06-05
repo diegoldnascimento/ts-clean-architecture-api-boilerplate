@@ -1,4 +1,4 @@
-import { InMemoryAccountRepository } from "../../../infra/repository/accountRepositoryMemory";
+import { InMemoryAccountRepository } from "../../../infra/repositories/accountRepositoryMemory";
 import { CreateAccountUseCase } from "./createAccountUseCase";
 
 const makeSut = () => {
