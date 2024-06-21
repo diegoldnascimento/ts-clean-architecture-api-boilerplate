@@ -9,7 +9,7 @@ export class Ticket {
     public readonly description: string,
     public readonly status: string,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date
+    public readonly updatedAt: Date,
   ) {}
 
   static create(
@@ -19,7 +19,7 @@ export class Ticket {
     description: string,
     status: string,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
   ): Ticket {
     Ticket.validate(id, code, name, description, status, createdAt, updatedAt);
 
@@ -30,7 +30,7 @@ export class Ticket {
       description,
       status,
       createdAt,
-      updatedAt
+      updatedAt,
     );
   }
 
@@ -39,7 +39,7 @@ export class Ticket {
     name: string,
     description: string,
     status: string,
-    updatedAt: Date
+    updatedAt: Date,
   ): Ticket {
     Ticket.validate(
       this.id,
@@ -48,7 +48,7 @@ export class Ticket {
       description,
       status,
       this.createdAt,
-      updatedAt
+      updatedAt,
     );
 
     return new Ticket(
@@ -58,7 +58,7 @@ export class Ticket {
       description,
       status,
       this.createdAt,
-      updatedAt
+      updatedAt,
     );
   }
 
@@ -68,7 +68,7 @@ export class Ticket {
       this.name,
       this.description,
       "closed",
-      updatedAt
+      updatedAt,
     );
   }
 
@@ -79,7 +79,7 @@ export class Ticket {
     description: string,
     status: string,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
   ): void {
     if (!id) {
       throw new MissingParamsError("id");
@@ -112,7 +112,7 @@ export class Ticket {
     if (createdAt > updatedAt) {
       throw new InvalidParamsError(
         "createdAt",
-        "must be less than or equal to updatedAt"
+        "must be less than or equal to updatedAt",
       );
     }
 
