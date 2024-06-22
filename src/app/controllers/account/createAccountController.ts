@@ -1,11 +1,11 @@
-import { CreateAccountUseCase } from "../../useCases/account/createAccountUseCase";
-import { MissingParamsError } from "../../errors/common/missingParamsError";
-import {
-  GenericHttpResponse,
-  HttpResponsePresenter,
-} from "../../presentation/http/httpResponse";
 import { Controller } from "../../../domain/controllers/controller";
 import { HttpRequest } from "../../../domain/protocols/http/httpRequest";
+import { MissingParamsError } from "../../errors/common/missingParamsError";
+import {
+    GenericHttpResponse,
+    HttpResponsePresenter
+} from "../../presentation/http/httpResponse";
+import { CreateAccountUseCase } from "../../useCases/account/createAccountUseCase";
 
 export interface CreateAccountResponse {
   ownerName: string;
